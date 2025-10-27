@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cleo – Your Leadership Assistant</title>
+<style>
+    body {
+      font-family: 'Newsreader', serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #1e2848;
+      color: #f5f5f5;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.8em;
+    }
+    .welcome {
+      text-align: center;
+      margin-top: 40px;
+    }
+    .welcome-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+    .welcome img {
+      max-width: 90%;
+      height: auto;
+      border-radius: 16px;
+    }
+    .start-button {
+      background-color: #fdbe00;
+      color: #1e2848;
+      border: none;
+      border-radius: 25px;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+    .container {
+      background-color: #d7cdc1;
+      margin-top: 50px;
+      border-radius: 20px;
+      padding: 30px 20px;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+    }
+    .message {
+      background-color: #ffffff;
+      color: #1e2848;
+      border-radius: 15px;
+      padding: 15px;
+      font-size: 1.1em;
+      margin-bottom: 25px;
+      display: inline-block;
+    }
+    .button {
+      background-color: #fdbe00;
+      color: #1e2848;
+      border: none;
+      border-radius: 20px;
+      padding: 15px 20px;
+      font-size: 1em;
+      font-weight: bold;
+      margin: 10px 0;
+      width: 100%;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #e0aa00;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f5f5f5;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      text-align: center;
+      z-index: 10;
+    }
+    .popup img {
+      width: 80px;
+      margin-bottom: 10px;
+    }
+    .popup a {
+      color: #1e2848;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    .restart {
+      margin-top: 20px;
+      background-color: #fdbe00;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.5s forwards;
+}
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.thinking {
+  font-style: italic;
+  color: #1e2848;
+  margin-bottom: 15px;
+}
+.dot {
+  animation: blink 1.2s infinite steps(1);
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink {
+  0%, 20% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.hidden {
+  display: none;
+}
+.avatar {
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.intro-quote {
+  font-size: 1.4em;
+  color: #1e2848;
+  max-width: 80%;
+  text-align: center;
+  font-style: italic;
+}
+
+.intro-quote {
+  font-size: 2em;
+  color: #1e2848;
+  max-width: 80%;
+  text-align: center;
+  font-style: italic;
+  margin: 40px 0;
+}
+
+.button {
+  background-color: #ffffff;
+  color: #1e2848;
+  border: 2px solid #fdbe00;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 1em;
+  font-weight: normal;
+  margin: 8px;
+  width: auto;
+  max-width: 90%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.button:hover {
+  background-color: #fdbe00;
+  color: #1e2848;
+}
+#options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+</style>
+</head>
+<body>
+<header>Virtual Assistant</header>
+<div class="welcome" id="welcome">
+<div class="welcome-content"><p class="intro-quote">Empower your leadership. Cleo guides you to the right actions for your team’s growth.</p>
+<button class="start-button" onclick="startChat()">Start with Cleo</button>
+</div>
+</div>
+<div class="container" id="chat">
+<div class="message" id="question">Hello! I’m Cleo, your leadership assistant. What would you like help with today?</div>
+<div id="options"></div>
+<div class="thinking hidden" id="thinking">Cleo is thinking<span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+<div class="popup" id="popup">
+<h3 id="popupTitle"></h3>
+<p id="popupText"></p>
+<a href="#" id="popupLink" target="_blank">Access the resource</a><br/>
+<button class="restart" onclick="location.reload()">Start over</button>
+</div>
+<script>
+
+function getIcon(label) {
+  const lower = label.toLowerCase();
+  if (lower.includes("onboard") || lower.includes("prise de poste")) return "🧳";
+  if (lower.includes("training") || lower.includes("skills")) return "📚";
+  if (lower.includes("evaluate") || lower.includes("trs")) return "✅";
+  if (lower.includes("performance") || lower.includes("feedback")) return "💬";
+  if (lower.includes("leadership") || lower.includes("manager")) return "🧭";
+  if (lower.includes("workday") || lower.includes("hr")) return "🛠️";
+  if (lower.includes("explore") || lower.includes("strategic")) return "🔍";
+  return "📌";
+}
+
+    const data = [
+  {
+    "level": 1,
+    "label": "Support my Team",
+    "parent": "",
+    "resource_title": "",
+    "resource_link": "",
+    "resource_description": ""
+  },
+  {
+    "level": 2,
+    "label": "Onboard a new GO/GE",
+    "parent": "Support my Team",
+    "resource_title": "",
+    "resource_link": "",
+    "resource_description": ""
+  },
+  {
+    "level": 3,
+    "label": "EAF - Onboarding",
+    "parent": "Onboard a new GO/GE",
+    "resource_title": "Onboarding kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "Onboarding kit helps you structure and personalize the onboarding experience for new G.O and G.E team members."
+  },
+  {
+    "level": 3,
+    "label": "NAM - Onboarding",
+    "parent": "Onboard a new GO/GE",
+    "resource_title": "Onboarding kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "Onboarding kit helps you structure and personalize the onboarding experience for new G.O and G.E team members."
+  },
+  {
+    "level": 3,
+    "label": "SAM - Onboarding",
+    "parent": "Onboard a new GO/GE",
+    "resource_title": "Onboarding kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "Onboarding kit helps you structure and personalize the onboarding experience for new G.O and G.E team members."
+  },
+  {
+    "level": 3,
+    "label": "ESAP - Onboarding",
+    "parent": "Onboard a new GO/GE",
+    "resource_title": "Onboarding kit",
+    "resource_link": "https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/Eg8oESDVurJGo93bN31fpZMBYr7WAhHGeGt3ocdQFr3VFg?e=2GkTgm",
+    "resource_description": "Onboarding kit helps you structure and personalize the onboarding experience for new G.O and G.E team members."
+  },
+  {
+    "level": 3,
+    "label": "CHINA - Onboarding",
+    "parent": "Onboard a new GO/GE",
+    "resource_title": "Onboarding kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "Onboarding kit helps you structure and personalize the onboarding experience for new G.O and G.E team members."
+  },
+  {
+    "level": 2,
+    "label": "Keeping track of my team's training",
+    "parent": "Support my Team",
+    "resource_title": "Manager Insight Hub",
+    "resource_link": "https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/ErXQu2rDFZJHjRxp-HTJ_7sBbhhnNjBpa_ZIuQ8s8cuYQA?e=97BW0k",
+    "resource_description": "Manager Insight Hub gives you clear insights on your team\u2019s learning progress and mandatory trainings."
+  },
+  {
+    "level": 2,
+    "label": "Evaluating my team's job tasks (TRS)",
+    "parent": "Support my Team",
+    "resource_title": "",
+    "resource_link": "",
+    "resource_description": ""
+  },
+  {
+    "level": 3,
+    "label": "EAF - TRS",
+    "parent": "Evaluating my team's job tasks (TRS)",
+    "resource_title": "TRS Kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "TRS Kit provides essential operational steps and best practices to ensure smooth team integration."
+  },
+  {
+    "level": 3,
+    "label": "NAM - TRS",
+    "parent": "Evaluating my team's job tasks (TRS)",
+    "resource_title": "TRS Kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "TRS Kit provides essential operational steps and best practices to ensure smooth team integration."
+  },
+  {
+    "level": 3,
+    "label": "SAM - TRS",
+    "parent": "Evaluating my team's job tasks (TRS)",
+    "resource_title": "TRS Kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "TRS Kit provides essential operational steps and best practices to ensure smooth team integration."
+  },
+  {
+    "level": 3,
+    "label": "ESAP - TRS",
+    "parent": "Evaluating my team's job tasks (TRS)",
+    "resource_title": "TRS Kit",
+    "resource_link": " https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/Etv6r6teHu5JoohLuT7YgDwBOGjNNTZSqZaIKTGaVF1KDA?e=CmDHpO",
+    "resource_description": "TRS Kit provides essential operational steps and best practices to ensure smooth team integration."
+  },
+  {
+    "level": 3,
+    "label": "CHINA - TRS",
+    "parent": "Evaluating my team's job tasks (TRS)",
+    "resource_title": "TRS Kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "TRS Kit provides essential operational steps and best practices to ensure smooth team integration."
+  },
+  {
+    "level": 2,
+    "label": "Successfully taking a \"Prise de Poste\"",
+    "parent": "Support my Team",
+    "resource_title": "",
+    "resource_link": "",
+    "resource_description": ""
+  },
+  {
+    "level": 3,
+    "label": "EAF - \"Prise de Poste\"",
+    "parent": "Successfully taking a \"Prise de Poste\"",
+    "resource_title": "Prise de poste Kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "Prise de poste Kit provides essential operational steps and best practices to ensure smooth team integration."
+  },
+  {
+    "level": 3,
+    "label": "NAM - \"Prise de Poste\"",
+    "parent": "Successfully taking a \"Prise de Poste\"",
+    "resource_title": "Prise de poste Kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "Prise de poste Kit provides essential operational steps and best practices to ensure smooth team integration."
+  },
+  {
+    "level": 3,
+    "label": "SAM - \"Prise de Poste\"",
+    "parent": "Successfully taking a \"Prise de Poste\"",
+    "resource_title": "Prise de poste Kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "Prise de poste Kit provides essential operational steps and best practices to ensure smooth team integration."
+  },
+  {
+    "level": 3,
+    "label": "ESAP - \"Prise de Poste\"",
+    "parent": "Successfully taking a \"Prise de Poste\"",
+    "resource_title": "Prise de poste Kit",
+    "resource_link": "https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/ElP21zLa-JlErPP7s1YKRBgBePajtn7wZP6Hu1w-nRyGIg?e=4Pp4vr",
+    "resource_description": "Prise de poste Kit provides essential operational steps and best practices to ensure smooth team integration."
+  },
+  {
+    "level": 3,
+    "label": "CHINA - \"Prise de Poste\"",
+    "parent": "Successfully taking a \"Prise de Poste\"",
+    "resource_title": "Prise de poste Kit",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "Prise de poste Kit provides essential operational steps and best practices to ensure smooth team integration."
+  },
+  {
+    "level": 2,
+    "label": "Developing the skills of my team",
+    "parent": "Support my Team",
+    "resource_title": "",
+    "resource_link": "",
+    "resource_description": ""
+  },
+  {
+    "level": 3,
+    "label": "Languages",
+    "parent": "Developing the skills of my team",
+    "resource_title": "Plateforme Speexx",
+    "resource_link": "https://boostlearning.my.canva.site/speexx-connection-guide-site-web",
+    "resource_description": "Plateforme Speexx supports your team\u2019s language development with flexible, self-paced learning tools."
+  },
+  {
+    "level": 3,
+    "label": "Behavioural skills",
+    "parent": "Developing the skills of my team",
+    "resource_title": "My eLearning Box",
+    "resource_link": "https://boostlearning.my.canva.site/my-learning-box-in-resort",
+    "resource_description": "My eLearning Box helps build soft skills that reinforce service mindset and collaboration."
+  },
+  {
+    "level": 3,
+    "label": "Professional skills ",
+    "parent": "Developing the skills of my team",
+    "resource_title": "",
+    "resource_link": "",
+    "resource_description": ""
+  },
+  {
+    "level": 4,
+    "label": "Hospitality",
+    "parent": "Comp\u00e9tences m\u00e9tiers ",
+    "resource_title": "My Talent Box",
+    "resource_link": "https://www.udttalentbox.com/",
+    "resource_description": "My Talent Box delivers technical know-how tailored to your team\u2019s specific roles and daily challenges."
+  },
+  {
+    "level": 2,
+    "label": "Mandatory training for my team",
+    "parent": "Support my Team",
+    "resource_title": "Essentials : Day One",
+    "resource_link": "https://wd3.myworkday.com/clubmed/d/inst/1$17816/17816$821.htmld",
+    "resource_description": "Essentials : Day One gathers key compliance trainings required for your team\u2019s operational readiness."
+  },
+  {
+    "level": 2,
+    "label": "Prepare a performance or development discussion with a member of my team",
+    "parent": "Support my Team",
+    "resource_title": "Development discussion guide",
+    "resource_link": "https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/ErXQu2rDFZJHjRxp-HTJ_7sBbhhnNjBpa_ZIuQ8s8cuYQA?e=WtwOu1",
+    "resource_description": "A valuable resource to support your team\u2019s performance and growth."
+  },
+  {
+    "level": 1,
+    "label": "Develop as a manager",
+    "parent": "",
+    "resource_title": "",
+    "resource_link": "",
+    "resource_description": ""
+  },
+  {
+    "level": 2,
+    "label": " Understanding the role of manager",
+    "parent": "Develop as a manager",
+    "resource_title": "The role of the Manager",
+    "resource_link": "TO_BE_ADDED",
+    "resource_description": "Brain Up programm strengthens leadership skills to grow into your next role with confidence."
+  },
+  {
+    "level": 2,
+    "label": "Becoming a Manager of Managers",
+    "parent": "Develop as a manager",
+    "resource_title": "Brain Up",
+    "resource_link": "https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/EsP05wuNJshCuUcspDgShx4Bo-rPIFV5EdOKlhf0tQM4tw?e=HjsPqy",
+    "resource_description": "This is a training path that supports the company's Key GOs in resorts. These are people who have been identified to become resort managers (RDS1 to RDS2). This content enables a manager to better understand this process"
+  },
+  {
+    "level": 2,
+    "label": " Leadership training",
+    "parent": "Develop as a manager",
+    "resource_title": "Leadership Compass",
+    "resource_link": "https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/EnxsDPm5k4JLuve0qYg6NzwByNijI1ceV6KU5Q40n9yFgA?e=3QkhSa",
+    "resource_description": "Discover the club med leadership model"
+  },
+  {
+    "level": 2,
+    "label": " Evaluate myself / receive feedback",
+    "parent": "Develop as a manager",
+    "resource_title": "360 at Club Med",
+    "resource_link": "https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/Eg01VMy1BWNEqGPlogRkMVMBQC0YTOMk8mhAy8xa822aHQ?e=Bu1NuV",
+    "resource_description": "A management development tool available to certain RDS2, the tool questions the manager's N-1 as well as several of his peers.  It gives you detailed results and a personalised development plan."
+  },
+  {
+    "level": 2,
+    "label": "Developing fundamental managerial rituals",
+    "parent": "Develop as a manager",
+    "resource_title": "eLearning managerial rituals",
+    "resource_link": "https://wd3.myworkday.com/clubmed/d/inst/1$17816/17816$381.htmld",
+    "resource_description": "E-learning for managers to help them evolve in their role: feedback, brief/debrief, setting objectives, etc."
+  },
+  {
+    "level": 2,
+    "label": "Training in soft skills",
+    "parent": "Develop as a manager",
+    "resource_title": "My eLearning Box",
+    "resource_link": "https://boostlearning.my.canva.site/my-learning-box-in-resort",
+    "resource_description": "My eLearning Box helps build soft skills that reinforce service mindset and collaboration."
+  },
+  {
+    "level": 1,
+    "label": "Find tools & processes",
+    "parent": "",
+    "resource_title": "",
+    "resource_link": "",
+    "resource_description": ""
+  },
+  {
+    "level": 2,
+    "label": "Find Club Med multimedia resources",
+    "parent": "Find tools & processes",
+    "resource_title": "DREAM",
+    "resource_link": "https://portal-dream.clubmed.com/",
+    "resource_description": "This is a library of content accessible to managers, who will find several images, photos and videos of Club Med, as well as the graphic charter (colours, font, logo). Here is direct access to the platform"
+  },
+  {
+    "level": 2,
+    "label": "Share with other Club Med GOs and Ges",
+    "parent": "Find tools & processes",
+    "resource_title": "Engage",
+    "resource_link": "https://engage.cloud.microsoft/main/feed",
+    "resource_description": "This is Club Med's corporate social network. Here you will find direct access to the platform"
+  },
+  {
+    "level": 2,
+    "label": "Managing my HR issues",
+    "parent": "Find tools & processes",
+    "resource_title": "Workday",
+    "resource_link": "https://wd3.myworkday.com/clubmed/login-saml.htmld",
+    "resource_description": "This is Club Med's HR tool, enabling employees to manage a wide range of HR information (leave, expense claims), as well as certain HR processes: performance and development discussions.... Managers will find direct access to this platform here"
+  },
+  {
+    "level": 1,
+    "label": "Explore strategic topics",
+    "parent": "",
+    "resource_title": "",
+    "resource_link": "",
+    "resource_description": ""
+  },
+  {
+    "level": 2,
+    "label": "Understanding the Key GO programme",
+    "parent": "Explore strategic topics",
+    "resource_title": "Programme Key GO",
+    "resource_link": "https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/EuAyTTWgDjZAs9SOg1EmnnkB4DPEdhc9y0mdV41MSCA6JQ?e=EM8ACy",
+    "resource_description": "Key GOs are Club Med G.Os who have been identified as having high potential within the company. The manager will find here some documents to better understand this programme"
+  },
+  {
+    "level": 2,
+    "label": "Understanding company projects",
+    "parent": "Explore strategic topics",
+    "resource_title": "ForeverYoung presentation",
+    "resource_link": "https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/EvD_lLE6-C5FgeOlFu-m1DYBEfLNZrSaKVrlWf6f5YALyQ?e=TuWy6d",
+    "resource_description": "This is Club Med's new corporate project. Here you'll find a full document giving you all the information you need about this project: ambition, objectives, projects, etc."
+  },
+  {
+    "level": 2,
+    "label": "Raising my team's awareness of environmental issues",
+    "parent": "Explore strategic topics",
+    "resource_title": "Guide Happy to Fresque",
+    "resource_link": "https://clubmedoffice.sharepoint.com/:f:/s/ResortPlatformProject/EjRLk2ATaJNIu0t92nnAaiYBf1uVwFQhRkAJ5xpc1zk-WA?e=3GNSjP",
+    "resource_description": "Club Med has set up a CSR awareness programme. This awareness will be shared with all Club Med GOs and GEs. Managers can find more information here"
+  },
+  {
+    "level": 2,
+    "label": "Familiarise myself with Club Med's training challenges",
+    "parent": "Explore strategic topics",
+    "resource_title": "Learning Loop",
+    "resource_link": "https://cynchy.github.io/udtlearningloop/",
+    "resource_description": "This is a dynamic newsletter that provides managers with information on major training projects set up by Club Med's Universit\u00e9 des Talents"
+  }
+];
+
+    let currentLevel = 1;
+    let currentParent = "";
+
+    function startChat() {
+      document.getElementById("welcome").style.display = "none";
+      document.getElementById("chat").style.display = "block";
+      showOptions(currentLevel, currentParent);
+    }
+
+    
+function showOptions(level, parent) {
+  const options = data.filter(item => item.level == level && item.parent === parent);
+  const container = document.getElementById("options");
+  const questionBox = document.getElementById("question");
+  const thinking = document.getElementById("thinking");
+
+  container.innerHTML = "";
+  questionBox.innerText = "Please choose an option:";
+
+  // Delay for animation, except for first level
+  if (level > 1) {
+    thinking.classList.remove("hidden");
+    setTimeout(() => {
+      thinking.classList.add("hidden");
+      renderOptions(options, container, level);
+    }, 800);
+  } else {
+    renderOptions(options, container, level);
+  }
+}
+
+function renderOptions(options, container, level) {
+  options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "button fade-in";
+    btn.innerText = opt.label;
+    btn.onclick = () => {
+      if (opt.resource_link) {
+        showPopup(opt.resource_title, opt.resource_description, opt.resource_link);
+      } else {
+        currentLevel++;
+        currentParent = opt.label;
+        showOptions(currentLevel, currentParent);
+      }
+    };
+    container.appendChild(btn);
+  });
+}
+function showPopup(title, text, link) {
+      document.getElementById("popupTitle").innerText = title;
+      document.getElementById("popupText").innerText = text;
+      document.getElementById("popupLink").href = link;
+      document.getElementById("popup").style.display = "block";
+    }
+  </script>
+</body>
+</html>
