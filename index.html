@@ -4,125 +4,189 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Cleo – Your Leadership Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet"/>
 <style>
+  :root {
+    --navy: #1f2c4d;
+    --sand: #f5efea;
+    --gold: #d6b25e;
+    --card-shadow: 0 18px 48px rgba(19, 32, 67, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+
   body {
-    font-family: 'Newsreader', serif;
-    background-color: #f5f5f5;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at 20% 20%, rgba(214, 178, 94, 0.15), transparent 30%),
+                radial-gradient(circle at 80% 10%, rgba(31, 44, 77, 0.1), transparent 28%),
+                #f8f6f3;
     margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
+    padding: 32px 16px 48px;
     min-height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+
+  .layout {
+    width: min(960px, 100%);
   }
 
   header {
-    background-color: #1e2848;
-    color: #f5f5f5;
-    width: 100%;
-    padding: 20px;
-  }
-
-  .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 960px;
-    margin: 0 auto;
-    gap: 20px;
+    margin-bottom: 22px;
+    color: var(--navy);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
   }
 
   #headerTitle {
-    font-size: 1.6em;
+    font-size: 1.5em;
     font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .mark {
+    background: white;
+    color: var(--navy);
+    padding: 10px 14px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(19, 32, 67, 0.12);
+    font-weight: 600;
+    font-family: 'Newsreader', serif;
   }
 
   .language-switcher select {
-    background-color: #f5f5f5;
-    color: #1e2848;
-    border: none;
-    border-radius: 12px;
-    padding: 8px 14px;
+    background-color: white;
+    color: var(--navy);
+    border: 1px solid rgba(31, 44, 77, 0.2);
+    border-radius: 14px;
+    padding: 10px 14px;
     font-size: 1em;
     cursor: pointer;
+    box-shadow: 0 6px 16px rgba(19, 32, 67, 0.08);
+  }
+
+  .card {
+    background: white;
+    border-radius: 28px;
+    padding: 32px 28px 38px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+  }
+
+  .card-top {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .badge {
+    background: var(--navy);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 1.2em;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    box-shadow: 0 12px 24px rgba(31, 44, 77, 0.26);
+  }
+
+  .tagline {
+    font-family: 'Newsreader', serif;
+    font-size: 1.15em;
+    color: rgba(31, 44, 77, 0.8);
+    margin: 0 0 8px;
   }
 
   .welcome {
-    text-align: center;
-    margin-top: 40px;
+    margin-top: 14px;
   }
 
   .welcome-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 26px;
   }
 
   .intro-quote {
-    font-size: 2em;
-    color: #1e2848;
-    max-width: 80%;
+    font-size: 1.4em;
+    color: var(--navy);
+    max-width: 720px;
     text-align: center;
     font-style: italic;
-    margin: 40px 0;
+    margin: 10px 0 12px;
+    line-height: 1.4;
   }
 
   .start-button {
-    background-color: #fdbe00;
-    color: #1e2848;
+    background-color: var(--navy);
+    color: white;
     border: none;
-    border-radius: 25px;
-    padding: 15px 30px;
-    font-size: 1.2em;
+    border-radius: 14px;
+    padding: 16px 28px;
+    font-size: 1.05em;
+    font-weight: 600;
     cursor: pointer;
+    box-shadow: 0 14px 30px rgba(31, 44, 77, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .start-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 36px rgba(31, 44, 77, 0.3);
   }
 
   .container {
-    background-color: #d7cdc1;
-    margin-top: 50px;
+    margin-top: 28px;
     border-radius: 20px;
-    padding: 30px 20px;
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    padding: 22px 16px;
+    background: linear-gradient(180deg, #f8f4ef 0%, #fdfbf8 100%);
     display: none;
+    border: 1px solid rgba(31, 44, 77, 0.05);
   }
 
   .message {
-    background-color: #ffffff;
-    color: #1e2848;
-    border-radius: 15px;
-    padding: 15px;
-    font-size: 1.1em;
-    margin-bottom: 25px;
+    background-color: white;
+    color: var(--navy);
+    border-radius: 18px;
+    padding: 16px 18px;
+    font-size: 1.05em;
+    margin: 0 0 20px;
     display: inline-block;
+    box-shadow: 0 10px 22px rgba(31, 44, 77, 0.12);
   }
 
   #options {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
   }
 
   .button {
-    background-color: #ffffff;
-    color: #1e2848;
-    border: 2px solid #fdbe00;
-    border-radius: 12px;
-    padding: 12px 18px;
+    background-color: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 18px;
     font-size: 1em;
-    margin: 8px 0;
-    width: 100%;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 12px 22px rgba(31, 44, 77, 0.22);
   }
 
   .button:hover {
-    background-color: #fdbe00;
-    color: #1e2848;
+    background-color: #22345c;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 28px rgba(31, 44, 77, 0.26);
   }
 
   .popup {
@@ -131,36 +195,43 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #f5f5f5;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    background-color: white;
+    padding: 32px 28px;
+    border-radius: 18px;
+    box-shadow: 0 20px 48px rgba(31, 44, 77, 0.28);
     text-align: center;
     z-index: 10;
-    max-width: 420px;
+    max-width: 460px;
+    border: 1px solid rgba(31, 44, 77, 0.08);
   }
 
   .popup a {
-    color: #1e2848;
+    color: var(--navy);
     text-decoration: underline;
-    font-weight: bold;
+    font-weight: 700;
   }
 
   .restart {
-    margin-top: 20px;
-    background-color: #fdbe00;
+    margin-top: 22px;
+    background-color: var(--navy);
     border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 12px 22px;
+    border-radius: 12px;
     cursor: pointer;
-    color: #1e2848;
+    color: white;
     font-size: 1em;
+    font-weight: 600;
+    box-shadow: 0 10px 22px rgba(31, 44, 77, 0.22);
+  }
+
+  .restart:hover {
+    background-color: #22345c;
   }
 
   .fade-in {
     opacity: 0;
-    transform: translateY(10px);
-    animation: fadeIn 0.5s forwards;
+    transform: translateY(6px);
+    animation: fadeIn 0.35s forwards;
   }
 
   @keyframes fadeIn {
@@ -172,8 +243,8 @@
 
   .thinking {
     font-style: italic;
-    color: #1e2848;
-    margin-top: 15px;
+    color: rgba(31, 44, 77, 0.9);
+    margin-top: 18px;
   }
 
   .dot {
@@ -189,9 +260,7 @@
     100% { opacity: 0; }
   }
 
-  .hidden {
-    display: none;
-  }
+  .hidden { display: none; }
 
   .visually-hidden {
     position: absolute;
@@ -205,26 +274,21 @@
     border: 0;
   }
 
-  @media (max-width: 600px) {
-    .header-content {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    #headerTitle {
-      font-size: 1.4em;
-    }
-
-    .language-switcher select {
-      align-self: stretch;
-    }
+  @media (max-width: 640px) {
+    header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .card { padding: 28px 20px 30px; }
+    #options { grid-template-columns: 1fr; }
+    .intro-quote { font-size: 1.2em; }
   }
 </style>
 </head>
 <body>
-<header>
-  <div class="header-content">
-    <span id="headerTitle"></span>
+<div class="layout">
+  <header>
+    <div class="header-left">
+      <div class="mark">Cleo</div>
+      <span id="headerTitle"></span>
+    </div>
     <div class="language-switcher">
       <label class="visually-hidden" for="languageSelect">Language</label>
       <select id="languageSelect" onchange="changeLanguage(this.value)">
@@ -232,18 +296,27 @@
         <option value="fr">Français</option>
       </select>
     </div>
+  </header>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="badge">Cleo</div>
+      <p class="tagline">Your personal companion for leadership journeys.</p>
+    </div>
+
+    <div class="welcome" id="welcome">
+      <div class="welcome-content">
+        <p class="intro-quote" id="introQuote"></p>
+        <button class="start-button" id="startButton" onclick="startChat()"></button>
+      </div>
+    </div>
+
+    <div class="container" id="chat">
+      <div class="message" id="question"></div>
+      <div id="options"></div>
+      <div class="thinking hidden" id="thinking"></div>
+    </div>
   </div>
-</header>
-<div class="welcome" id="welcome">
-  <div class="welcome-content">
-    <p class="intro-quote" id="introQuote"></p>
-    <button class="start-button" id="startButton" onclick="startChat()"></button>
-  </div>
-</div>
-<div class="container" id="chat">
-  <div class="message" id="question"></div>
-  <div id="options"></div>
-  <div class="thinking hidden" id="thinking"></div>
 </div>
 <div class="popup" id="popup" role="dialog" aria-modal="true">
   <h3 id="popupTitle"></h3>
